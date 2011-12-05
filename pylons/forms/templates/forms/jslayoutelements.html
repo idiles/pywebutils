@@ -1,0 +1,40 @@
+<html xmlns:py="http://genshi.edgewall.org/"
+    xmlns:xi="http://www.w3.org/2001/XInclude" py:strip="">
+
+    <div py:def="disp_label(fname)" py:with="field=field_dict[fname]" py:strip="">
+        <label py:if="show_labels and label_text and not field.suppress_label"
+        id="${field.id}_label" for="${field.id}"
+        class="fieldlabel${field.is_required and ' required' or ''}"
+        py:content="Markup(field.label_text)" />
+    </div>
+
+    <div py:def="disp_field(fname)" py:with="field=field_dict[fname]"
+        py:replace="field.display(value_for(field), **args_for(field))" />
+
+    <div py:def="disp_help(fname)" py:with="field=field_dict[fname]" py:strip="">
+        <div py:if="field.help_text" class="fieldhelp" py:content="field.help_text" />
+    </div>
+
+    <div py:def="disp_error(fname)" py:with="field=field_dict[fname]; error=error_for(field)" py:strip="">
+        <div py:if="show_children_errors and error and not field.show_error" 
+              class="fielderror" py:content="error" />
+    </div>
+
+    <div py:def="disp_container(fname)" py:strip="">
+        <div py:replace="disp_label(fname)" />
+        <div py:replace="disp_field(fname)" />
+        <div py:replace="disp_help(fname)" />
+        <div py:replace="disp_error(fname)" />
+    </div>
+
+    <div py:def="disp_hidden_fields()" py:strip="" py:if="hidden_fields">
+        <div py:for="field in hidden_fields"
+             py:with="error = error_for(field)"
+             py:strip="">
+            <div py:replace="field.display(value_for(field), **args_for(field))" />
+            <!--!div py:if="show_children_errors and error and not field.show_error" 
+                  class="fielderror" py:content="error" /-->
+        </div>
+    </div>
+
+</html>

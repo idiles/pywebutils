@@ -1,0 +1,15 @@
+<div xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:py="http://genshi.edgewall.org/"
+    xmlns:xi="http://www.w3.org/2001/XInclude"
+    py:strip="True">
+    <py:if test="defined('errors')">
+        <ul py:if="errors" class="error">
+            <li py:for="error in errors" py:content="error" />
+        </ul>
+    </py:if>
+    <py:if test="defined('info')" class="notice">
+        <ul py:if="info">
+            <li py:for="i in info" py:content="i" />
+        </ul>
+    </py:if>
+</div>

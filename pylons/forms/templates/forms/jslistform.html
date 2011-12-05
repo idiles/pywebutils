@@ -1,0 +1,40 @@
+<div xmlns:py="http://genshi.edgewall.org/"
+    xmlns:xi="http://www.w3.org/2001/XInclude"
+    py:strip="">
+
+    <div id="${id}_container">
+        <form 
+            id="${id}"
+            name="${name}"
+            action="${action}"
+            method="${method}"
+            class="${css_class}"
+            py:with="submits = filter(lambda f: getattr(f, 'type', None) == 'submit', fields)" 
+            py:attrs="attrs">
+
+            <xi:include href="_script.html" />
+            <xi:include href="fields.html" />
+
+            <div class="fielderror" py:if="error and show_error" py:content="error" />
+            <div py:if="hidden_fields" py:replace="render_hidden_fields(hidden_fields)" />
+            <div py:for="i, field in enumerate(filter(lambda f: getattr(f, 'type', None) != 'submit', fields))" 
+                id="${field.id}_container"
+                class="${i%2 and 'odd' or 'even'} fieldcontainer"
+                py:attrs="args_for(field).get('container_attrs') or field.container_attrs"
+                py:content="render_field(field)" />
+            <div py:if="submits" class="buttons">
+                ${submits[0].display(value_for(submits[0]), **args_for(submits[0]))}
+                <span py:if="cancel_text and cancel_action"
+                    class="form-cancel-actions">
+                    or 
+                    <a href="#" class="form-cancel-action" 
+                        rel="${cancel_action}" py:content="cancel_text"></a>
+                </span>
+
+                <img src="/images/spinner.gif" alt="" class="spinner"
+                    style="display: none" />
+            </div>
+            <div py:if="error and not error.error_dict" class="fielderror" py:content="error" />
+        </form>
+    </div>
+</div>

@@ -1,0 +1,49 @@
+<div xmlns:py="http://genshi.edgewall.org/" py:strip="">
+
+    <div>
+        <div style="position: relative" class="yui-skin-sam">
+            <input type="hidden" id="${random_id}" name="${name}"
+                value="${value}"></input>
+            <input type="button" id="${random_id}_button" value="${value}"
+                class="calendar-button"></input>
+            <div id="${random_id}_cal_container" 
+                style="display: none; position: absolute; z-index: 2;
+                    width: 150px;"></div>
+        </div>
+        <script type="text/javascript">
+            YAHOO.namespace("idilesforms");
+
+            YAHOO.idilesforms.init = function() {
+                YAHOO.idilesforms.cal = new
+                    YAHOO.widget.Calendar("${random_id}_cal",
+                    "${random_id}_cal_container", 
+                    {
+												selected: '${cal_value}', 
+                                                ${cal_min_date and "mindate: '"+cal_min_date+"'," or ""}
+                                                ${cal_max_date and "maxdate: '"+cal_max_date+"'," or ""}
+												close: true 
+										});
+                YAHOO.idilesforms.cal.render();
+                YAHOO.idilesforms.cal.selectEvent.subscribe(
+                    function(type, args, obj) 
+                    {
+                        var button = document.getElementById('${random_id}_button');
+                        var field = document.getElementById('${random_id}');
+                        var tmp = args[0][0];
+                        var newDate = new Date(tmp[0]+'/'+tmp[1]+'/'+tmp[2]);
+                        var d = YAHOO.util.Date.format(newDate, 
+                            {format: '${date_format}'});
+                        button.value = d;
+                        field.value = d;
+                    },
+                    YAHOO.idilesforms.cal, true); 
+                YAHOO.util.Event.addListener("${random_id}_button", "click", 
+                    YAHOO.idilesforms.cal.show, YAHOO.idilesforms.cal, true);
+                YAHOO.idilesforms.cal.selectEvent.subscribe(YAHOO.idilesforms.cal.hide,
+                    YAHOO.idilesforms.cal, true);
+            }
+
+            YAHOO.util.Event.onDOMReady(YAHOO.idilesforms.init);
+        </script>
+    </div>
+</div>

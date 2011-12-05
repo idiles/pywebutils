@@ -1,0 +1,20 @@
+<div xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:py="http://genshi.edgewall.org/"
+    xmlns:xi="http://www.w3.org/2001/XInclude"
+    py:strip="True">
+    
+    <?python
+        pag = tg.paginate
+    ?>
+    <p style="text-align: center" py:if="pag.page_count > 1" class="paginate-pages">
+        <a py:if="pag.current_page > 1" href="${pag.href_first}">&laquo;</a>
+        <a py:if="pag.current_page > 1" href="${pag.href_prev}">&lsaquo;</a>
+        <span py:for="page in pag.pages">
+            <a py:if="page != pag.current_page"
+                href="${pag.get_href(page)}">${page}</a>
+            <b py:if="page == pag.current_page">${page}</b>
+        </span>
+        <a py:if="pag.current_page &lt; pag.page_count" href="${pag.href_next}">&rsaquo;</a>
+        <a py:if="pag.current_page &lt; pag.page_count" href="${pag.href_last}">&raquo;</a>
+    </p>
+</div>

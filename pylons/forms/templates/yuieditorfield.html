@@ -1,0 +1,71 @@
+<div xmlns:py="http://genshi.edgewall.org/"
+    class="yui-skin-sam">
+    <textarea name="${name}" id="${random_id}" class="${css_class}"
+        py:content="value"
+        py:attrs="attrs" rows="5" cols="50" />
+    <script type="text/javascript">
+        var textarea = document.getElementById('${random_id}');
+        var editor${random_id} = new YAHOO.widget.Editor(textarea, {
+            height: '${height}',
+            width: '${width}',
+            markup: 'xhtml',
+            toolbar: {
+                collapse: true,
+                titlebar: '&nbsp;',
+                buttons: [
+                    { group: 'textstyle', label: ' ', 
+                        buttons: [ 
+                            { type: 'push', label: 'Bold CTRL + SHIFT + B', value: 'bold' },
+                            { type: 'push', label: 'Italic CTRL + SHIFT + I', value: 'italic' },
+                            { type: 'push', label: 'Underline CTRL + SHIFT + U', value: 'underline' }
+                        ] 
+                    },
+                    { group: 'parastyle', label: ' ', 
+                        buttons: [ 
+                        { type: 'select', label: 'Normal', value: 'heading', disabled: true, 
+                            menu: [ 
+                                { text: 'Normal', value: 'none', checked: true }, 
+                                { text: 'Header 1', value: 'h1' }, 
+                                { text: 'Header 2', value: 'h2' }, 
+                                { text: 'Header 3', value: 'h3' }, 
+                                { text: 'Header 4', value: 'h4' }, 
+                                { text: 'Header 5', value: 'h5' }, 
+                                { text: 'Header 6', value: 'h6' } 
+                            ] 
+                        }
+                        //{ type: 'push', label: 'Horizontal row', value: 'hr' }
+                        ] 
+                    },
+                    { type: 'separator' }, 
+                    { group: 'insertlist', label: ' ',
+                        buttons: [ 
+                            { type: 'push', label: 'Create an Unordered List', value: 'insertunorderedlist' }, 
+                            { type: 'push', label: 'Create an Ordered List', value: 'insertorderedlist' }
+                        ]
+                    },
+                    { type: 'separator' }, 
+                    { group: 'alignment', label: ' ',
+                        buttons: [
+                            { type: 'push', label: 'Align Left CTRL + SHIFT + [', value: 'justifyleft' },
+                            { type: 'push', label: 'Align Center CTRL + SHIFT + |', value: 'justifycenter' },
+                            { type: 'push', label: 'Align Right CTRL + SHIFT + ]', value: 'justifyright' },
+                            { type: 'push', label: 'Justify', value: 'justifyfull' },
+                            { type: 'separator' }, 
+                            { type: 'push', label: 'HTML Link CTRL + SHIFT + L', value: 'createlink' }
+                            //{ type: 'push', label: 'Insert Image', value: 'insertimage' }
+                        ] 
+                    } 
+                ]
+            }
+        });
+        editor${random_id}.on('toolbarLoaded', function(o) {
+            //this.toolbar.collapse();
+            this.toolbar.on('hrClick', function(o) {
+                this.execCommand('inserthtml', '&lt;hr /&gt;');
+            }, editor${random_id}, true);
+        });
+        editor${random_id}.on('editorKeyUp', function(o) {this.saveHTML();});
+        editor${random_id}.on('afterNodeChange', function(o) {this.saveHTML();});
+        editor${random_id}.render();
+    </script>
+</div>

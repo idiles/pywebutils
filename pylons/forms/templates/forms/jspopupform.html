@@ -1,0 +1,70 @@
+<form xmlns:py="http://genshi.edgewall.org/"
+    id="${id}"
+    name="${name}"
+    action="${action}"
+    method="${method}"
+    class="${css_class}"
+    py:with="submits = filter(lambda f: f.type == 'submit', fields)" 
+    py:attrs="attrs" >
+    <div class="${id}_show_text">
+        <a href="#" onclick="this.parentNode.style.display = 'none';
+            this.parentNode.nextSibling.style.display = '';
+            return false;">add task</a>
+    </div>
+    <style type="text/css">
+    ${id}_fields
+    {
+        display: none;
+    }
+    </style>
+    <div class="${id}_fields">
+        <div class="fielderror" py:if="error and show_error" py:content="error" />
+        <div py:if="hidden_fields">
+            <div py:for="field in hidden_fields"
+                 py:with="error=error_for(field)"
+                 py:strip="True">
+                <span py:replace="field.display(value_for(field), **args_for(field))" />
+                <span py:if="show_children_errors and error and not field.show_error" 
+                      class="fielderror" py:content="error" />
+            </div>
+        </div>
+        <div py:for="i, field in enumerate(filter(lambda f: f.type != 'submit', fields))" 
+            id="${field.id}_container"
+            class="${i%2 and 'odd' or 'even'}"
+            py:attrs="args_for(field).get('container_attrs') or field.container_attrs"
+            py:with="required=[None,' required'][int(field.is_required)]; 
+                     error=error_for(field);
+                     label_text = field.label_text;
+                     help_text = field.help_text;" >
+            <label py:if="show_labels and label_text and not field.suppress_label" id="${field.id}_label" for="${field.id}" 
+                   class="fieldlabel${required}" py:content="label_text" />
+            ${field.display(value_for(field), **args_for(field))}
+            <span py:if="help_text" class="fieldhelp" py:content="help_text" />
+            <span py:if="show_children_errors and error and not field.show_error" 
+                  class="fielderror" py:content="error" />
+        </div>
+        <div py:if="submits">
+            <script type="text/javascript">
+            function submit_form(form)
+            {
+                YAHOO.util.Connect.setForm(form);
+                var callback = {
+                    success: function(o)
+                    {
+                        set_and_eval(form, o.responseText);
+                    }
+                };
+                YAHOO.util.Connect.asyncRequest('POST', form.action, callback);
+                return false;
+            }
+            document.getElementById('${id}').onsubmit = function() {return submit_form(this)};
+            </script>
+            ${submits[0].display(value_for(submits[0]), **args_for(submits[0]))}
+            or <a href="" onclick="this.parentNode.style.display = 'none';
+                this.parentNode.previousSibling.style.display = '';
+                this.parentNode.parentNode.reset();
+                return false;" py:content="cancel_text"></a>
+        </div>
+        <span py:if="error and not error.error_dict" class="fielderror" py:content="error" />
+    </div>
+</form>

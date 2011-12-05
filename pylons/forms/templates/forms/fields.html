@@ -1,0 +1,25 @@
+<html xmlns:py="http://genshi.edgewall.org/" py:strip="">
+    <div py:def="render_field(field)"
+        py:with="required = field.is_required and ' required' or None; 
+                 error = error_for(field);
+                 label_text = field.label_text;
+                 help_text = field.help_text;" py:strip="">
+        <label py:if="show_labels and label_text and not field.suppress_label"
+            id="${field.id}_label" for="${field.id}"
+            class="fieldlabel${required}" py:content="Markup(label_text)" />
+        <div py:if="show_children_errors and error and not field.show_error" 
+              class="fielderror" py:content="error" />
+        <div py:replace="field.display(value_for(field), **args_for(field))" />
+        <div py:if="help_text" class="fieldhelp" py:content="help_text" />
+    </div>
+
+    <div py:def="render_hidden_fields(fields)">
+        <div py:for="field in fields"
+             py:with="error = error_for(field)"
+             py:strip="True">
+            <div py:replace="field.display(value_for(field), **args_for(field))" />
+            <div py:if="show_children_errors and error and not field.show_error" 
+                  class="fielderror" py:content="error" />
+        </div>
+    </div>
+</html>

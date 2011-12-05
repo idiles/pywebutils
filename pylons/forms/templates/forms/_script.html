@@ -1,0 +1,50 @@
+<div xmlns:py="http://genshi.edgewall.org/"
+    py:strip="">
+
+    <script py:if="ajax" type="text/javascript">
+        $(document).ready(function()
+        {
+            $('#${id}').ajaxForm({
+                beforeSubmit: function()
+                {
+                    $('#${id} .spinner').show();
+                },
+
+                success: function(data)
+                {
+                    $('#${id}_container').html(data);
+                    (${on_success})();
+                }
+            });
+
+            $('.form-cancel-action').click(function()
+            {
+                var action = $(this).attr('rel');
+
+                if (action == 'reset')
+                {
+                    $('#${id} .spinner').show();
+                    var url = $('#${id}').attr('action');
+                    $('#${id}_container').load(url);
+                }
+                else if (action == 'hide')
+                {
+                    $('#${id}_container').hide();
+                }
+                else if (action == 'fadeOut')
+                {
+                    $('#${id}_container').fadeOut();
+                }
+                else if (action.substr(0, 8) == 'redirect')
+                {
+                    var url = action.substr(9, action.length);
+                    window.location = url;
+                }
+                
+                return false;
+            });
+        });
+    </script>
+
+</div>
+

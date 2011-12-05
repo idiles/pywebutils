@@ -1,0 +1,24 @@
+<span xmlns:py="http://genshi.edgewall.org/" py:strip="">
+    <input type="hidden" name="${name}" id="${random_id}"
+        value="${value}"
+        py:attrs="attrs" />
+    <div id="${random_id}_cal_container">
+        <script type="text/javascript">
+            function ${random_id}_set_date(event)
+            {
+                var hidden = document.getElementById('${random_id}');
+                var dates = YAHOO.${random_id}.cal.getSelectedDates();
+                if (dates.length)
+                    hidden.value = YAHOO.util.Date.format(dates[0], {format: '${date_format}'})
+            }
+            YAHOO.namespace("${random_id}");
+            var cal = new YAHOO.widget.Calendar("${random_id}_cal_container", 
+								{
+										selected: '${cal_value}'
+								});
+            cal.selectEvent.subscribe(${random_id}_set_date);
+            cal.render();
+            YAHOO.${random_id}.cal = cal;
+        </script>
+    </div>
+</span>
